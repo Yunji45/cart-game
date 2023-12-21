@@ -22,6 +22,8 @@ public class Register extends Application {
     private TextField emailField;
     private PasswordField passwordRegisterField;
     private PasswordField confirmPasswordField;
+    private TextField usernameField;
+    private TextField phoneNumberField;
     private ToggleGroup genderToggleGroup;
     private ComboBox<String> nationalityComboBox;
     private Spinner<Integer> ageSpinner;
@@ -41,7 +43,7 @@ public class Register extends Application {
         MenuBar menuBar = new MenuBar();
 
         // Membuat Menu "Navigation" dengan submenu "Login" dan "Register"
-        Menu navigationMenu = new Menu("Dashboard");
+        Menu navigationMenu = new Menu("Menu");
         MenuItem loginMenuItem = new MenuItem("Login");
         MenuItem registerMenuItem = new MenuItem("Register");
         navigationMenu.getItems().addAll(loginMenuItem, registerMenuItem);
@@ -53,18 +55,24 @@ public class Register extends Application {
         loginMenuItem.setOnAction(e -> showLoginScene(primaryStage));
 
         // Komponen GUI untuk Register
-        Label registerTitleLabel = new Label("Register Form");
+        Label registerTitleLabel = new Label("Register");
         registerTitleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 30));
         Label emailLabel = new Label("Email:");
         Label passwordRegisterLabel = new Label("Password:");
         Label confirmPasswordLabel = new Label("Confirm Password:");
-        Label genderLabel = new Label("Gender:");
-        Label nationalityLabel = new Label("Nationality:");
-        Label ageLabel = new Label("Age:");
+//        Label genderLabel = new Label("Gender:");
+//        Label nationalityLabel = new Label("Nationality:");
+//        Label ageLabel = new Label("Age:");
+        Label usernameLabel = new Label("Username:"); // Tambahkan label untuk username
+        Label phoneNumberLabel = new Label("Phone Number:"); // Tambahkan label untuk nomor telepon
+
 
         emailField = new TextField();
         passwordRegisterField = new PasswordField();
         confirmPasswordField = new PasswordField();
+        usernameField = new TextField(); // Tambahkan field untuk username
+        phoneNumberField = new TextField(); // Tambahkan field untuk nomor telepon
+
 
         genderToggleGroup = new ToggleGroup();
         RadioButton maleRadioButton = new RadioButton("Male");
@@ -91,18 +99,24 @@ public class Register extends Application {
         registerGrid.add(registerTitleLabel, 0, 0, 2, 1);
         registerGrid.add(emailLabel, 0, 1);
         registerGrid.add(emailField, 1, 1);
-        registerGrid.add(passwordRegisterLabel, 0, 2);
-        registerGrid.add(passwordRegisterField, 1, 2);
-        registerGrid.add(confirmPasswordLabel, 0, 3);
-        registerGrid.add(confirmPasswordField, 1, 3);
-        registerGrid.add(genderLabel, 0, 4);
-        registerGrid.add(maleRadioButton, 1, 4);
-        registerGrid.add(femaleRadioButton, 2, 4);
-        registerGrid.add(nationalityLabel, 0, 5);
-        registerGrid.add(nationalityComboBox, 1, 5);
-        registerGrid.add(ageLabel, 0, 6);
-        registerGrid.add(ageSpinner, 1, 6);
-        registerGrid.add(registerButton, 0, 7);
+        // Tambahkan field dan label username
+        registerGrid.add(usernameLabel, 0, 2);
+        registerGrid.add(usernameField, 1, 2);
+        registerGrid.add(passwordRegisterLabel, 0, 3);
+        registerGrid.add(passwordRegisterField, 1, 3);
+        registerGrid.add(confirmPasswordLabel, 0, 4);
+        registerGrid.add(confirmPasswordField, 1, 4);
+        // Tambahkan field dan label nomor telepon
+        registerGrid.add(phoneNumberLabel, 0, 5);
+        registerGrid.add(phoneNumberField, 1, 5);
+//        registerGrid.add(genderLabel, 0, 6);
+//        registerGrid.add(maleRadioButton, 1, 6);
+//        registerGrid.add(femaleRadioButton, 2, 6);
+//        registerGrid.add(nationalityLabel, 0, 7);
+//        registerGrid.add(nationalityComboBox, 1, 7);
+//        registerGrid.add(ageLabel, 0, 8);
+//        registerGrid.add(ageSpinner, 1, 8);
+        registerGrid.add(registerButton, 0, 9);
 
         registerButton.setStyle("-fx-background-color: #808080; -fx-text-fill: white;");
 
@@ -238,22 +252,26 @@ public class Register extends Application {
             databaseManager.closeConnection();
         }
     }
-
-    // Metode untuk mendaftar pengguna
- // Metode untuk mendaftar pengguna
+    
     private void register() {
         String email = emailField.getText();
         String password = passwordRegisterField.getText();
         String confirmPassword = confirmPasswordField.getText();
-        String gender = ((RadioButton) genderToggleGroup.getSelectedToggle()).getText();
-        String nationality = nationalityComboBox.getValue();
-        int age = ageSpinner.getValue();
+        String username = usernameField.getText(); // Tambahkan untuk mendapatkan username
+        String gender = "Male";
+        String nationality = "Indonesia";
+        int age = 17;
+
+//        String gender = ((RadioButton) genderToggleGroup.getSelectedToggle()).getText();
+//        String nationality = nationalityComboBox.getValue();
+//        int age = ageSpinner.getValue();
         String role = "user";
+        String number = phoneNumberField.getText(); // Tambahkan untuk mendapatkan nomor telepon
 
         if (password.equals(confirmPassword)) {
             try {
                 // Panggil metode insertUser dengan informasi pengguna
-                databaseManager.insertUser(email, password, gender, nationality, age, role);
+                databaseManager.insertUser(username, email, password, gender, nationality, age, role, number);
 
                 // Menampilkan alert setelah registrasi berhasil
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -287,5 +305,55 @@ public class Register extends Application {
             System.out.println("Password and Confirm Password do not match.");
         }
     }
+
+
+    // Metode untuk mendaftar pengguna
+ // Metode untuk mendaftar pengguna
+//    private void register() {
+//        String email = emailField.getText();
+//        String password = passwordRegisterField.getText();
+//        String confirmPassword = confirmPasswordField.getText();
+//        String gender = ((RadioButton) genderToggleGroup.getSelectedToggle()).getText();
+//        String nationality = nationalityComboBox.getValue();
+//        int age = ageSpinner.getValue();
+//        String role = "user";
+//
+//        if (password.equals(confirmPassword)) {
+//            try {
+//                // Panggil metode insertUser dengan informasi pengguna
+//                databaseManager.insertUser(email, password, gender, nationality, age, role);
+//
+//                // Menampilkan alert setelah registrasi berhasil
+//                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//                alert.setTitle("Registration Successful");
+//                alert.setHeaderText(null);
+//                alert.setContentText("User registered successfully!");
+//                alert.showAndWait();
+//
+//                // Mengarahkan pengguna ke halaman login
+//                Main login = new Main();
+//                Stage loginStage = new Stage();
+//                login.start(loginStage);
+//
+//                // Menutup stage register (Register.java)
+//                Stage stage = (Stage) registerButton.getScene().getWindow();
+//                stage.close();
+//            } catch (SQLException e) {
+//                // Menangani pengecualian jika email sudah terdaftar
+//                if (e.getErrorCode() == 1062) { // 1062 adalah kode error untuk duplicate entry
+//                    Alert alert = new Alert(Alert.AlertType.ERROR);
+//                    alert.setTitle("Registration Failed");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("Email is already registered. Please use a different email.");
+//                    alert.showAndWait();
+//                } else {
+//                    System.out.println("Failed to register user: " + e.getMessage());
+//                    e.printStackTrace();
+//                }
+//            }
+//        } else {
+//            System.out.println("Password and Confirm Password do not match.");
+//        }
+//    }
 
 }

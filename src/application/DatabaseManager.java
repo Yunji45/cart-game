@@ -52,20 +52,22 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-
-    public void insertUser(String email, String password, String gender, String nationality, int age, String role) throws SQLException {
+    
+    public void insertUser(String username, String email, String password, String gender, String nationality, int age, String role, String number) throws SQLException {
         try {
             // Nonaktifkan otomatis commit
             connection.setAutoCommit(false);
 
-            String query = "INSERT INTO users (email, password, gender, nationality, age, role) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO users (username, email, password, gender, nationality, age, role, number) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, email);
-                statement.setString(2, password);
-                statement.setString(3, gender);
-                statement.setString(4, nationality);
-                statement.setInt(5, age);
-                statement.setString(6, role);
+                statement.setString(1, username);
+                statement.setString(2, email);
+                statement.setString(3, password);
+                statement.setString(4, gender);
+                statement.setString(5, nationality);
+                statement.setInt(6, age);
+                statement.setString(7, role);
+                statement.setString(8, number);
 
                 statement.executeUpdate();
             }
@@ -90,9 +92,9 @@ public class DatabaseManager {
             }
         }
     }
-    
+
     public User getUserFromDatabase(String email, String password) {
-        String query = "SELECT id, username, email, password FROM users WHERE email = ? AND password = ?";
+        String query = "SELECT id, username, email, password, number FROM users WHERE email = ? AND password = ?";
         
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, email);
@@ -102,11 +104,12 @@ public class DatabaseManager {
                 if (resultSet.next()) {
                     int id = resultSet.getInt("id");
                     String username = resultSet.getString("username");
-                    // Retrieve email and password from the result set
+                    // Retrieve email, password, and number from the result set
                     String userEmail = resultSet.getString("email");
                     String userPassword = resultSet.getString("password");
+                    String userNumber = resultSet.getString("number");
 
-                    return new User(id, username, userEmail, userPassword);
+                    return new User(id, username, userEmail, userPassword, userNumber);
                 }
             }
         } catch (SQLException e) {
@@ -114,6 +117,69 @@ public class DatabaseManager {
         }
         return null;
     }
+
+
+//    public void insertUser(String email, String password, String gender, String nationality, int age, String role) throws SQLException {
+//        try {
+//            // Nonaktifkan otomatis commit
+//            connection.setAutoCommit(false);
+//
+//            String query = "INSERT INTO users (email, password, gender, nationality, age, role) VALUES (?, ?, ?, ?, ?, ?)";
+//            try (PreparedStatement statement = connection.prepareStatement(query)) {
+//                statement.setString(1, email);
+//                statement.setString(2, password);
+//                statement.setString(3, gender);
+//                statement.setString(4, nationality);
+//                statement.setInt(5, age);
+//                statement.setString(6, role);
+//
+//                statement.executeUpdate();
+//            }
+//
+//            // Commit secara manual
+//            connection.commit();
+//        } catch (SQLException e) {
+//            // Rollback transaksi jika terjadi kesalahan
+//            try {
+//                connection.rollback();
+//            } catch (SQLException rollbackException) {
+//                rollbackException.printStackTrace();
+//            }
+//
+//            throw e; // Lempar kembali SQLException setelah rollback
+//        } finally {
+//            try {
+//                // Set otomatis commit kembali ke true
+//                connection.setAutoCommit(true);
+//            } catch (SQLException autoCommitException) {
+//                autoCommitException.printStackTrace();
+//            }
+//        }
+//    }
+//    
+//    public User getUserFromDatabase(String email, String password) {
+//        String query = "SELECT id, username, email, password FROM users WHERE email = ? AND password = ?";
+//        
+//        try (PreparedStatement statement = connection.prepareStatement(query)) {
+//            statement.setString(1, email);
+//            statement.setString(2, password);
+//
+//            try (ResultSet resultSet = statement.executeQuery()) {
+//                if (resultSet.next()) {
+//                    int id = resultSet.getInt("id");
+//                    String username = resultSet.getString("username");
+//                    // Retrieve email and password from the result set
+//                    String userEmail = resultSet.getString("email");
+//                    String userPassword = resultSet.getString("password");
+//
+//                    return new User(id, username, userEmail, userPassword);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     
     // Metode untuk menambah produk ke database
